@@ -45,5 +45,3 @@
     (if pass 
       (db/update :md5break hash {:status status :pass pass})
       (db/update :md5break hash {:status status}))))
-
-
