@@ -32,3 +32,8 @@ The server send `OK` if the hash matches the password.
 The server send `NOT OK` if the hash does not match the password.
 
 > NOTE: The server will check if the password matches the hash.
+
+## TODO
+
+- [ ] Check if hash exists before update it in the db
+- [ ] Check if password match hash (adding native module md5)
