@@ -1,3 +1,5 @@
+(import ./db-helper)
+
 (defn handle
   "Send a hash to a client"
   [server client]
@@ -8,12 +10,15 @@
   (unless (= (length args) 4)
     ((eprintf "usage: %s [ip] [port] [hash file]" (args 0))
      (os/exit 1)))
-  (def [ip port] [(get args 1) (scan-number (get args 2))])
+  (def [ip port file] [(get args 1) (scan-number (get args 2)) (get args 3)])
+  (printf "Initialise db with %s" file)
+  (db-helper/initdb file)
   (def server (net/listen ip port :datagram))
   (printf "Listening on %s:%d" ip port)
   (while true
     (var buffer @"")
     (def client (net/recv-from server 1024 buffer))
+    # TODO: figure out how to handle client (send hash or ask for hash)
     (match (string/trim buffer)
       "GET" (handle server client)
       "POST" (printf "got %q from %s:%d" buffer ;(net/address-unpack client))
