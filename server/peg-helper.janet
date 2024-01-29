@@ -4,5 +4,6 @@
     ~{
       :main (1 :method)
       :method (+ (<- "GET") (* (<- "POST") :response))
-      :response (* " " (<- (32 :w)) " " (<- (any 1)))
+      :response (* " " (<- (32 :hex)) " " (<- (any 1)))
+      :hex (+ (range "af") (range "AF") (range "09"))
       }))
