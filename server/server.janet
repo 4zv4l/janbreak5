@@ -1,10 +1,20 @@
 (import ./db-helper)
+(import ./peg-helper)
 
-(defn handle
-  "Send a hash to a client"
+(defn send-hash
+  "Send a hash to crack to the client (without newline so 32 bytes)"
   [server client]
-  (net/send-to server client "hello !\n")
-  (printf "Sent %q to %s:%d" "Hello !\n" ;(net/address-unpack client)))
+  (def hash (db-helper/gethash 'todo))
+  (net/send-to server client (string/format "%s" hash))
+  (printf "Sent %q to %s:%d" hash ;(net/address-unpack client)))
+
+(defn recv-hash
+  "Receive a hash and password from client, check if it match and update the db"
+  [server client hash password]
+  # TODO: check if password match hash
+  (db-helper/updatehash hash 'todo)
+  (print "db state after update:")
+  (db-helper/showdb))
 
 (defn main [& args]
   (unless (= (length args) 4)
@@ -18,8 +28,7 @@
   (while true
     (var buffer @"")
     (def client (net/recv-from server 1024 buffer))
-    # TODO: figure out how to handle client (send hash or ask for hash)
-    (match (string/trim buffer)
-      "GET" (handle server client)
-      "POST" (printf "got %q from %s:%d" buffer ;(net/address-unpack client))
-      _ (print "got garbage from a client"))))
+    (match (peg/match peg-helper/hash-grammar (string/trim buffer))
+      ["GET"] (send-hash server client)
+      ["POST" hash password] (recv-hash server client hash password)
+      rest (print "got garbage from a client: " (string/format "%q" rest)))))
