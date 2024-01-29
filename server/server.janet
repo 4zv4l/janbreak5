@@ -14,10 +14,10 @@
   [server client hash password]
   # TODO: check if password match hash instead of `true`
   (if true
-    ((net/send-to server client "Thanks !")
+    ((net/send-to server client "OK")
     (db-helper/updatehash hash 'done password))
 
-    ((net/send-to server client "Not cool !")
+    ((net/send-to server client "NOT OK")
     (db-helper/updatehash hash 'todo)))
   (print "db state after update:")
   (db-helper/showdb))
