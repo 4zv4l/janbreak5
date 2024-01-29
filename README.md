@@ -35,5 +35,6 @@ The server send `NOT OK` if the hash does not match the password.
 
 ## TODO
 
-- [ ] Check if hash exists before update it in the db
 - [ ] Check if password match hash (adding native module md5)
+- [ ] Handle the case when there are no more 'todo' hash (but maybe still 'doing')
+- [X] Check if hash exists before update it in the db
