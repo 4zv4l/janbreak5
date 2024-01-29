@@ -5,14 +5,20 @@
   "Send a hash to crack to the client (without newline so 32 bytes)"
   [server client]
   (def hash (db-helper/gethash 'todo))
+  (db-helper/updatehash hash 'doing)
   (net/send-to server client (string/format "%s" hash))
   (printf "Sent %q to %s:%d" hash ;(net/address-unpack client)))
 
 (defn recv-hash
   "Receive a hash and password from client, check if it match and update the db"
   [server client hash password]
-  # TODO: check if password match hash
-  (db-helper/updatehash hash 'todo)
+  # TODO: check if password match hash instead of `true`
+  (if true
+    ((net/send-to server client "Thanks !")
+    (db-helper/updatehash hash 'done password))
+
+    ((net/send-to server client "Not cool !")
+    (db-helper/updatehash hash 'todo)))
   (print "db state after update:")
   (db-helper/showdb))
 
