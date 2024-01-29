@@ -13,14 +13,15 @@
   "Receive a hash and password from client, check if it match and update the db"
   [server client hash password]
   # TODO: check if password match hash instead of `true`
-  (if true
-    ((net/send-to server client "OK")
-    (db-helper/updatehash hash 'done password))
-
-    ((net/send-to server client "NOT OK")
-    (db-helper/updatehash hash 'todo)))
-  (print "db state after update:")
-  (db-helper/showdb))
+  (if (db-helper/hashindb hash)
+    (do (if true
+          ((net/send-to server client "OK")
+           (db-helper/updatehash hash 'done password))
+          ((net/send-to server client "NOT OK")
+           (db-helper/updatehash hash 'todo)))
+        (print "db state after update:")
+        (db-helper/showdb))
+    (net/send-to server client "NOT INSIDE")))
 
 (defn main [& args]
   (unless (= (length args) 4)

@@ -38,6 +38,12 @@
   (with-conn
     (get (array/pop (db/from :md5break :limit 1 :where {:status status})) :id)))
 
+(defn hashindb
+  "Check if the given hash is in the db"
+  [hash]
+  (with-conn
+    (not= (db/find :md5break hash) nil)))
+
 # TODO: check in hash exists in the db before update
 (defn updatehash
   "Update the status of a hash in the db"
