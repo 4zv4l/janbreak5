@@ -4,24 +4,27 @@
 (defn send-hash
   "Send a hash to crack to the client (without newline so 32 bytes)"
   [server client]
-  (def hash (db-helper/gethash 'todo))
-  (db-helper/updatehash hash 'doing)
-  (net/send-to server client (string/format "%s" hash))
-  (printf "Sent %q to %s:%d" hash ;(net/address-unpack client)))
+  (if-let [hash (db-helper/gethash 'todo)]
+    (do
+      (db-helper/updatehash hash 'doing)
+      (net/send-to server client (string/format "%s" hash))
+      (printf "Sent %q to %s:%d" hash ;(net/address-unpack client)))
+    (net/send-to server client "EMPTY")))
 
 (defn recv-hash
   "Receive a hash and password from client, check if it match and update the db"
   [server client hash password]
   # TODO: check if password match hash instead of `true`
-  (if (db-helper/hashindb hash)
-    (do (if true
-          ((net/send-to server client "OK")
-           (db-helper/updatehash hash 'done password))
-          ((net/send-to server client "NOT OK")
-           (db-helper/updatehash hash 'todo)))
-        (print "db state after update:")
-        (db-helper/showdb))
-    (net/send-to server client "NOT INSIDE")))
+  (case true
+    (not (db-helper/hashindb hash)) (net/send-to server client "NOT INSIDE")
+    (db-helper/hashstatus hash "done") (net/send-to server client "ALREADY CRACKED")
+    true (do
+           (net/send-to server client "OK")
+           (db-helper/updatehash hash 'done password)
+           (print "db state after update:")
+           (db-helper/showdb))
+    ((net/send-to server client "NOT OK")
+     (db-helper/updatehash hash 'todo))))
 
 (defn main [& args]
   (unless (= (length args) 4)
