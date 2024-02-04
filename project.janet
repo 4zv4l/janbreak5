@@ -7,3 +7,8 @@
 (declare-executable
   :name "server"
   :entry "server/server.janet")
+
+(declare-native
+  :name "md5"
+  :source ["md5/md5.c"]
+  :ldflags ["-lcrypto"])
