@@ -35,12 +35,12 @@ The server send `NOT INSIDE` if the hash is not in the db.
 
 The server send `ALREADY CRACKED` if the hash status is `done`.
 
-The server send `EMPTY` if there are no hash in `todo` state.
+The server send `EMPTY` if there is no hash in `todo` state at the moment.
 
 > NOTE: The server will check if the password matches the hash.
 
 ## TODO
 
-- [ ] Check if password match hash (adding native module md5)
+- [X] Check if password match hash (adding native module md5)
 - [X] Handle the case when there are no more 'todo' hash (but maybe still 'doing')
 - [X] Check if hash exists before update it in the db
