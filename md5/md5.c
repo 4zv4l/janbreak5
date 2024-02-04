@@ -53,19 +53,16 @@ static Janet md5checksum(int32_t argc, Janet *argv) {
     return janet_wrap_false();
 }
 
+/****************/
+/* Module Entry */
+/****************/
+
 static const JanetReg cfuns[] = {
     {"md5checksum", md5checksum, "(md5/md5checksum password hash)\n\nCalculates MD5 hash and checks for a match."},
     {NULL, NULL, NULL}
 };
 
-/****************/
-/* Module Entry */
-/****************/
 
 JANET_MODULE_ENTRY(JanetTable *env) {
-    JanetRegExt cfuns[] = {
-        JANET_REG("test", cfun_test),
-        JANET_REG_END
-    };
-    janet_cfuns_ext(env, "md5", cfuns);
+    janet_cfuns(env, "md5", cfuns);
 }
