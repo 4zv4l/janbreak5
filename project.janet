@@ -7,7 +7,7 @@
 (declare-executable
   :name "server"
   :entry "server/server.janet"
-  :lflags ["-lcrypto"])
+  :lflags ["-lcrypto" "-static" "-flto"])
 
 (declare-native
   :name "md5"
