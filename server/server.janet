@@ -1,5 +1,6 @@
 (import ./db-helper)
 (import ./peg-helper)
+(import md5)
 
 (defn send-hash
   "Send a hash to crack to the client (without newline so 32 bytes)"
@@ -14,13 +15,12 @@
 (defn recv-hash
   "Receive a hash and password from client, check if it match and update the db"
   [server client hash password]
-  # TODO: check if password match hash instead of `true`
   (cond
     (not (db-helper/hashindb hash))
       (net/send-to server client "NOT INSIDE")
     (db-helper/hashstatus hash "done")
       (net/send-to server client "ALREADY CRACKED")
-    true
+    (md5/md5checksum password hash)
       (do
         (net/send-to server client "OK")
         (db-helper/updatehash hash 'done password)
