@@ -22,22 +22,22 @@ static Janet md5checksum(int32_t argc, Janet *argv) {
     EVP_MD_CTX *context = EVP_MD_CTX_new();
 
     if (!context) {
-        return janet_cstringv("Error creating context");
+        janet_panic("Error creating context");
     }
 
     if (!EVP_DigestInit(context, EVP_md5())) {
         EVP_MD_CTX_free(context);
-        return janet_cstringv("Error initializing the hash");
+        janet_panic("Error initializing the context");
     }
 
     if (!EVP_DigestUpdate(context, password, strlen((const char *)password))) {
         EVP_MD_CTX_free(context);
-        return janet_cstringv("Error calculating MD5 hash");
+        janet_panic("Error calculating MD5 hash");
     }
 
     if (!EVP_DigestFinal(context, pswd_md5, NULL)) {
         EVP_MD_CTX_free(context);
-        return janet_cstringv("Error saving the MD5 hash");
+        janet_panic("Error saving the MD5 hash");
     }
 
     EVP_MD_CTX_free(context);
