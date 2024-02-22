@@ -44,4 +44,4 @@
     (match (peg/match peg-helper/hash-grammar (string/trim buffer))
       ["GET"] (send-hash server client)
       ["POST" hash password] (recv-hash server client hash password)
-      _ (print "got garbage from a client: " (string/format "%q" buffer)))))
+      _ (printf "got garbage from a client: %q" buffer))))
