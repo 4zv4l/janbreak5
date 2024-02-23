@@ -40,11 +40,13 @@ static Janet md5checksum(int32_t argc, Janet *argv) {
 
     EVP_MD_CTX_free(context);
 
+    // convert md5 digest to hex
     char *hash_md5_calculated = (char*)hash_digest;
     for (int i = 0; i < 16; i++) {
         hash_md5_calculated += sprintf(hash_md5_calculated, "%02x", pswd_md5[i]);
     }
 
+    // compare the two hashes
     if (!strncmp((char*)hash_md5, (char*)hash_digest, SIZE_HASH)) {
         return janet_wrap_true();
     }
@@ -59,7 +61,6 @@ static const JanetReg cfuns[] = {
     {"md5checksum", md5checksum, "(md5/md5checksum password hash)\n\nCalculates MD5 hash and checks for a match."},
     {NULL, NULL, NULL}
 };
-
 
 JANET_MODULE_ENTRY(JanetTable *env) {
     janet_cfuns(env, "md5", cfuns);
