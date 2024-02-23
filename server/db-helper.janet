@@ -33,10 +33,10 @@
     (pp hash))))
 
 (defn gethash
-  "Get a hash from the db with a status `todo` and update it to `doing`"
+  "Get a random hash from the db with a status `todo`"
   [status]
   (with-conn
-    (get-in (db/from :md5break :limit 1 :where {:status status}) [0 :id])))
+    (get-in (db/from :md5break :limit 1 :where {:status status} :order "random()") [0 :id])))
 
 (defn hashindb
   "Check if the given hash is in the db"
