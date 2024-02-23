@@ -7,7 +7,6 @@
   [server client]
   (if-let [hash (db-helper/gethash 'todo)]
     (do
-      (db-helper/updatehash hash 'doing)
       (net/send-to server client (string/format "%s" hash))
       (printf "Sent %q to %s:%d" hash ;(net/address-unpack client)))
     (net/send-to server client "EMPTY")))
@@ -22,12 +21,9 @@
       (net/send-to server client "ALREADY CRACKED")
     (md5/md5checksum password hash)
       (do
-        (net/send-to server client "OK")
-        (db-helper/updatehash hash 'done password)
-        (print "db state after update:")
-        (db-helper/showdb))
-    ((net/send-to server client "NOT OK")
-    (db-helper/updatehash hash 'todo))))
+        (net/send-to server client "OK") (db-helper/updatehash hash 'done password)
+        (print "db state after update:") (db-helper/showdb))
+    ((net/send-to server client "NOT OK"))))
 
 (defn main [& args]
   (unless (= (length args) 4)
