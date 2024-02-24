@@ -23,7 +23,7 @@
       (do
         (net/send-to server client "OK") (db-helper/updatehash hash 'done password)
         (print "db state after update:") (db-helper/showdb))
-    ((net/send-to server client "NOT OK"))))
+    (net/send-to server client "NOT OK")))
 
 (defn main [& args]
   (unless (= (length args) 4)
