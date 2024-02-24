@@ -17,7 +17,8 @@ $ ./server 127.0.0.1 8080 hashfile
 ```
 
 This will start an udp server on `127.0.0.1:8080` and load into `md5break.sqlite3`
-the hashes found in `hashfile`, it is not destructive so if a hash already exists in the db, it will simply skip it.
+the hashes found in `hashfile`, it is not destructive so if a hash already exists in the db, it will simply skip it
+to avoid to lose already cracked hash.
 
 ## Protocol
 
@@ -42,5 +43,6 @@ The server send `EMPTY` if there is no hash in `todo` state at the moment.
 ## TODO
 
 - [X] Check if password match hash (adding native module md5)
-- [X] Handle the case when there are no more 'todo' hash (but maybe still 'doing')
+- [X] Handle the case when there are no more 'todo' hash
 - [X] Check if hash exists before update it in the db
+- [X] Remove 'doing' state and use a random hash access instead
